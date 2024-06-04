@@ -1,0 +1,22 @@
+{
+  "name": "kakaojs",
+  "version": "1.2.0",
+  "description": "A mirror of the Kakao Javascript SDK to support easier distribution via CDNs.",
+  "main": "kakao.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taengstagram/kakaojs.git"
+  },
+  "keywords": [
+    "kakao"
+  ],
+  "author": "taengstagram",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/taengstagram/kakaojs/issues"
+  },
+  "homepage": "https://github.com/taengstagram/kakaojs#readme"
+}
