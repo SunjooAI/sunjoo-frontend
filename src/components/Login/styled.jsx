@@ -69,11 +69,13 @@ const BtnList = styled.div`
   column-gap: 1rem;
 `;
 
+
 const snsTitle = styled.div`
   color: #262626;
   text-align: center;
   font-size: 1.6rem;
 `;
+
 
 const S = {
   Container,

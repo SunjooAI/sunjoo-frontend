@@ -4,7 +4,7 @@
   3. [x]JWT 토큰(access, refresh)을 RESPONSE로 받게 되고 localstorage나 cookie에 저장시킨다. => 현재 cookie 사용으로 setting 해놓음.
   4. */
 import { useEffect, useState } from "react";
-import { useNavigate, withRouter } from "react-router-dom";
+import { Link, useNavigate, withRouter } from "react-router-dom";
 // import axios from "axios";
 import { Cookies } from "react-cookie";
 import S from "./styled";
@@ -14,6 +14,9 @@ import jwt_decode from "jwt-decode";
 import { GET_NAME } from "../../reducer/nameSlice";
 import noAuthClient from "../../apis/noAuthClient";
 import authClient from "../../apis/authClient";
+import TextField  from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import { Button } from "@mui/material";
 
 const { Kakao } = window;
 
@@ -28,7 +31,7 @@ function Login() {
     try {
       const res = await noAuthClient({
         method: "get",
-        url: `/auth/login?token=${kakaoToken}`,
+        url: `/auth/login/kakao?token=${kakaoToken}`,
       });
 
       const cookie = new Cookies();
@@ -112,6 +115,12 @@ function Login() {
         </S.explainBox>
         <S.BtnList>
           <div>
+            <div><TextField sx={{ width: 350}} size="small" id="outlined-basic" label="아이디" variant="outlined" margin="dense" fullWidth /></div>
+            <div><TextField sx={{ width: 350}} size="small" id="outlined-basic" label="비밀번호" variant="outlined" margin="dense" type="password" fullWidth/></div>
+            <Box mb={2} mt={1}>
+              <Link to="/Register"> <Button>회원가입</Button></Link>
+              <Link to="/InputEmail"> <Button>비밀번호 찾기</Button></Link>
+            </Box>
             <div
               id="kakao-login-btn"
               onClick={login}

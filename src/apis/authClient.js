@@ -4,8 +4,8 @@ import { Cookies } from "react-cookie";
 import settingCookie from "../utils/settingCookie";
 
 const authClient = axios.create({
-  // baseURL: "http://localhost:8080",
-  baseURL: "http://141.164.49.27",
+  baseURL: "http://localhost:9000",
+  //baseURL: "http://141.164.49.27",
   headers: {
     "Content-Type": "application/json",
   },
