@@ -13,10 +13,12 @@ import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { GET_NAME } from "../../reducer/nameSlice";
 import noAuthClient from "../../apis/noAuthClient";
+import CustomApi from "../../apis/CustomApi";
 import authClient from "../../apis/authClient";
 import TextField  from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
+import axios from "axios";
 
 const { Kakao } = window;
 
@@ -25,6 +27,8 @@ function Login() {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [jwtToken, setJwtToken] = useState("");
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
 
   // snsLogin
   const snsLogin = async (kakaoToken) => {
@@ -63,7 +67,7 @@ function Login() {
     }
   };
 
-  // 로그인
+  // 카카오 로그인
   const login = async (e) => {
     e.preventDefault();
     try {
@@ -96,6 +100,29 @@ function Login() {
     }
   };
 
+  // 자체 로그인
+  const handleLogin = async() => {
+    console.log(id);
+    console.log(password);
+
+    try {
+      const res = await CustomApi({
+        method: "post",
+        url: "/auth/login",
+        
+        data: {
+          id:id,
+          password:password
+        },
+      });
+    
+      console.log(res.data);
+    }
+    catch(err) {
+      console.log("로그인 실패", err);
+      }
+    }
+
   useEffect(() => {
     if (Kakao.Auth.getAccessToken()) {
       setIsLogin(true);
@@ -115,12 +142,47 @@ function Login() {
         </S.explainBox>
         <S.BtnList>
           <div>
-            <div><TextField sx={{ width: 350}} size="small" id="outlined-basic" label="아이디" variant="outlined" margin="dense" fullWidth /></div>
-            <div><TextField sx={{ width: 350}} size="small" id="outlined-basic" label="비밀번호" variant="outlined" margin="dense" type="password" fullWidth/></div>
+            <div>
+              <TextField 
+                sx={{ width: 350}} 
+                size="small" 
+                id="outlined-basic" 
+                label="아이디" 
+                variant="outlined" 
+                margin="dense" 
+                fullWidth 
+                onChange={(e)=>{setId(e.target.value)}}/>
+            </div>
+            <div>
+              <TextField 
+                sx={{ width: 350}} 
+                size="small" 
+                id="outlined-basic" 
+                label="비밀번호" 
+                variant="outlined" 
+                margin="dense" 
+                type="password" 
+                fullWidth 
+                onChange={(e)=>{setPassword(e.target.value)}}
+                />
+            </div>
             <Box mb={2} mt={1}>
               <Link to="/Register"> <Button>회원가입</Button></Link>
               <Link to="/InputEmail"> <Button>비밀번호 찾기</Button></Link>
             </Box>
+            <Button 
+                onClick={handleLogin}
+                variant="contained"
+                style={{
+                    backgroundColor: "#9932cc",
+                    fontFamily: "BejuryuFont",
+                    fontSize: "18px",
+                    width: "222px",
+                    height: "53px",
+                    marginBottom: "5px"
+                }}  
+            >로그인
+            </Button>
             <div
               id="kakao-login-btn"
               onClick={login}
