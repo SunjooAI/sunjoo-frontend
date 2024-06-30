@@ -116,7 +116,8 @@ function Login() {
         },
       });
     
-      console.log(res.data);
+      console.log(res.headers['authorization']);
+      //localStorage.setItem("user-token", res.headers.get("Authorization"));
     }
     catch(err) {
       console.log("로그인 실패", err);
