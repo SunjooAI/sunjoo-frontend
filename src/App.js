@@ -42,8 +42,9 @@ axios.defaults.withCredentials = true;
 
 function App() {
   const dispatch = useDispatch();
-  const userName = useSelector((state) => state.name.name);
   //const userName = useSelector((state) => state.name.name);
+  //const userName = useSelector((state) => state.name.name);
+  const userToken = useSelector((state) => state.name.name);
 
   // const isLogin = () => {
   //   const token = settingCookie("get-access");
@@ -77,7 +78,7 @@ function App() {
       <ContentWrapper>
         <Header />
         <Routes>
-          {userName !== "" ? (
+          {userToken === "" ? (
             <Route path="/" element={<LoginPage />} />
           ) : (
             <Route path="/" element={<MainPage />} />

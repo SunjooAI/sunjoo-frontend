@@ -5,12 +5,11 @@
   4. */
   import { useEffect, useState } from "react";
   import { Link, useNavigate, withRouter } from "react-router-dom";
-  // import axios from "axios";
-  import { Cookies } from "react-cookie";
   import S from "./styled";
   import logo from "../../image/logo2.png";
   import { useDispatch } from "react-redux";
   import jwt_decode from "jwt-decode";
+  import {CustomApiRegister} from "../../apis/CustomApi";
   import { GET_NAME } from "../../reducer/nameSlice";
   import noAuthClient from "../../apis/noAuthClient";
   import authClient from "../../apis/authClient";
@@ -21,7 +20,34 @@
   const { Kakao } = window;
   
   function Register() {
-  
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [id, setId] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+
+    const handleRegister = async() => {
+      try {
+        const res = await CustomApiRegister({
+          method: "post",
+          url: "/auth/register",
+          
+          data: {
+            id:id,
+            password:password,
+            name:name
+          },
+        });
+        
+        alert("회원가입이 완료되었습니다.");
+        navigate("/login");
+      }
+      catch(err) {
+          console.log("회원가입 실패", err);
+          alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+        }
+      }
+
     return (
       <S.Container>
         <S.Wrapper>
@@ -43,6 +69,7 @@
                     size="small"
                     id="outlined-required"
                     label="아이디"
+                    onChange={(e)=>{setId(e.target.value)}}
                 />
             </Box>
             <Box m={2}>
@@ -55,6 +82,7 @@
                     id="outlined-required"
                     label="비밀번호"
                     type="password"
+                    onChange={(e)=>{setPassword(e.target.value)}}
                 />
             </Box>
             <Box m={2}>
@@ -66,9 +94,11 @@
                     size="small"
                     id="outlined-required"
                     label="이름"
+                    onChange={(e)=>{setName(e.target.value)}}
                 />
             </Box>
             <Button 
+              onClick={handleRegister}
                 variant="contained"
                 style={{
                     backgroundColor: "#9932cc",

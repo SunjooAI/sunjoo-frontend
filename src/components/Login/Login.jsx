@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { GET_NAME } from "../../reducer/nameSlice";
 import noAuthClient from "../../apis/noAuthClient";
-import CustomApi from "../../apis/CustomApi";
+import {CustomApiLogin} from "../../apis/CustomApi";
 import authClient from "../../apis/authClient";
 import TextField  from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -106,7 +106,7 @@ function Login() {
     console.log(password);
 
     try {
-      const res = await CustomApi({
+      const res = await CustomApiLogin({
         method: "post",
         url: "/auth/login",
         
@@ -116,11 +116,15 @@ function Login() {
         },
       });
     
-      console.log(res.headers['authorization']);
-      //localStorage.setItem("user-token", res.headers.get("Authorization"));
+      const authToken = res.headers['authorization'];
+      console.log(authToken);
+      localStorage.setItem("user-token", authToken);
+      dispatch(GET_NAME(authToken));
+      navigate("/");
     }
     catch(err) {
-      console.log("로그인 실패", err);
+        console.log("로그인 실패", err);
+        alert("로그인에 실패했습니다. 다시 시도해주세요.");
       }
     }
 
