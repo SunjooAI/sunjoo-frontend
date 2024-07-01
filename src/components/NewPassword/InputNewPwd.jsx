@@ -5,18 +5,37 @@
   import S from "./styled";
   import logo from "../../image/logo2.png";
   import { useDispatch } from "react-redux";
-  import jwt_decode from "jwt-decode";
-  import { GET_NAME } from "../../reducer/nameSlice";
-  import noAuthClient from "../../apis/noAuthClient";
-  import authClient from "../../apis/authClient";
-  import Input  from '@mui/material/Input';
+  import {CustomApi} from "../../apis/CustomApi";
   import TextField  from '@mui/material/TextField';
   import Box from '@mui/material/Box';
   import Button from '@mui/material/Button';
-  import SendIcon from '@mui/icons-material/Send';
 
   function InputNewPwd() {
-  
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const [id, setId] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+
+    const sendNewPwd = async() => {
+      try {
+        
+        const res = await CustomApi({
+          method: "put",
+          url: "/auth/new-password",
+          data: {
+            id:id,
+            newPassword:newPassword
+          },
+        });
+        alert("비밀번호가 성공적으로 변경되었습니다!");
+      }
+      catch(err) {
+          console.log("비밀번호 변경 실패", err);
+          alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
+        }
+      }
+
     return (
       <S.Container>
         <S.Wrapper>
@@ -36,8 +55,21 @@
                     required
                     size="small"
                     id="outlined-required"
+                    label="아이디"
+                    onChange={(e)=>{setId(e.target.value)}}
+                />
+            </Box>
+          <Box m={2}>
+                <TextField
+                    sx={{
+                        width: 350
+                    }}
+                    required
+                    size="small"
+                    id="outlined-required"
                     label="새 비밀번호"
                     type="password"
+                    onChange={(e)=>{setNewPassword(e.target.value)}}
                 />
             </Box>
             <Box m={2}>
@@ -53,6 +85,7 @@
                 />
             </Box>
             <Button 
+              onClick={sendNewPwd}
                 variant="contained" 
                 style={{
                     backgroundColor: "#9932cc",

@@ -9,7 +9,7 @@
   import logo from "../../image/logo2.png";
   import { useDispatch } from "react-redux";
   import jwt_decode from "jwt-decode";
-  import {CustomApiRegister} from "../../apis/CustomApi";
+  import {CustomApi} from "../../apis/CustomApi";
   import { GET_NAME } from "../../reducer/nameSlice";
   import noAuthClient from "../../apis/noAuthClient";
   import authClient from "../../apis/authClient";
@@ -28,7 +28,7 @@
 
     const handleRegister = async() => {
       try {
-        const res = await CustomApiRegister({
+        const res = await CustomApi({
           method: "post",
           url: "/auth/register",
           
@@ -98,7 +98,7 @@
                 />
             </Box>
             <Button 
-              onClick={handleRegister}
+                onClick={handleRegister}
                 variant="contained"
                 style={{
                     backgroundColor: "#9932cc",

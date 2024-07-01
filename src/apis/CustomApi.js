@@ -8,11 +8,11 @@ const CustomApiLogin = axios.create({
   withCredentials: true,
 });
 
-const CustomApiRegister = axios.create({
+const CustomApi = axios.create({
   baseURL: "http://localhost:9000",
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-export { CustomApiLogin, CustomApiRegister };
+export { CustomApiLogin, CustomApi };

@@ -1,26 +1,48 @@
-/* 로그인, 회원가입의 로직
-  1. [x]카카오 토큰을 받아온다
-  2. [x]서버에게 GET 요청 (서버와 통신 될때 넣을 얘쩡)
-  3. [x]JWT 토큰(access, refresh)을 RESPONSE로 받게 되고 localstorage나 cookie에 저장시킨다. => 현재 cookie 사용으로 setting 해놓음.
-  4. */
   import { useEffect, useState } from "react";
+  import { useDispatch } from "react-redux";
   import { useNavigate, withRouter } from "react-router-dom";
   // import axios from "axios";
   import { Cookies } from "react-cookie";
   import S from "./styled";
   import logo from "../../image/logo2.png";
-  import { useDispatch } from "react-redux";
-  import jwt_decode from "jwt-decode";
   import { GET_NAME } from "../../reducer/nameSlice";
-  import noAuthClient from "../../apis/noAuthClient";
-  import authClient from "../../apis/authClient";
+  import {CustomApi} from "../../apis/CustomApi";
   import Input  from '@mui/material/Input';
   import Box from '@mui/material/Box';
   import Button from '@mui/material/Button';
   import SendIcon from '@mui/icons-material/Send';
 
+
   function InputEmail() {
-  
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const [email, setEmail] = useState("");
+
+    const sendEmail = async() => {
+      console.log("메일 전송 : " + email);
+      const authToken = localStorage.getItem("user-token");
+
+      try {
+        
+        const res = await CustomApi({
+          method: "post",
+          url: "/auth/reset-password/send-email",
+          headers: {
+            'Authorization': authToken
+          },
+          data: {
+           email:email
+          },
+        });
+        alert("메일 전송이 완료되었습니다. 메일함을 확인해 주세요!");
+      }
+      catch(err) {
+          console.log("메일 전송 실패", err);
+          alert("메일 전송에 실패했습니다. 다시 시도해주세요.");
+        }
+      }
+
     return (
       <S.Container>
         <S.Wrapper>
@@ -32,8 +54,9 @@
             유효한 이메일 주소를 입력해 주세요! 비밀번호 재설정 링크가 포함된 안내 메일이 발송됩니다.
           </S.explainBox>
           <S.BtnList>
-            <Box mb={3}><Input placeholder="e-mail" sx={{width: 300}}/></Box>
+            <Box mb={3}><Input placeholder="e-mail" sx={{width: 300}} onChange={(e)=>{setEmail(e.target.value)}}/></Box>
             <Button 
+                onClick={sendEmail}
                 variant="contained" 
                 endIcon={<SendIcon />} 
                 style={{
