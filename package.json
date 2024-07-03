@@ -9,11 +9,15 @@
     "@mui/joy": "^5.0.0-alpha.83",
     "@mui/material": "^5.13.34",
     "@mui/utils": "^5.13.1",
+    "@material-ui/core": "4.9.10",
+    "@material-ui/icons": "4.9.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
+    "jquery": "3.5.0",
+    "openvidu-browser": "2.27.0",
     "jwt-decode": "^3.1.2",
     "kakao-sdk": "^3.1.0",
     "kakaojs": "^1.2.0",
@@ -33,6 +37,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:openvidu-react": "npm install --prefix ../library/ && node library-copy.js && cd ../library && npm run create-library",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
