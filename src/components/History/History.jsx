@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import authClient from "../../apis/authClient";
+import { CustomApi } from "../../apis/CustomApi";
 
 function History() {
   const navigate = useNavigate();
@@ -41,11 +42,15 @@ function History() {
   };
 
   useEffect(() => {
+    const authToken = localStorage.getItem("user-token");
     const reviewList = async () => {
       try {
-        const response = await authClient({
+        const response = await CustomApi({
           method: "get",
           url: "/analyze",
+          headers: {
+            'Authorization': authToken
+          },
         });
         // 최신순으로 정렬하기 위함.
         const sortedList = response.data.sort((a, b) => b.id - a.id);

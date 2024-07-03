@@ -24,14 +24,14 @@ function MainPage() {
   const userId = parseInt(localStorage.getItem("user-id"));
 
   // 이미지 디코딩 함수
-  const decodeBase64 = (base64) => {
-    const binaryString = window.atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return URL.createObjectURL(new Blob([bytes.buffer], { type: "image/png" }));
-  };
+  // const decodeBase64 = (base64) => {
+  //   const binaryString = window.atob(base64);
+  //   const bytes = new Uint8Array(binaryString.length);
+  //   for (let i = 0; i < binaryString.length; i++) {
+  //     bytes[i] = binaryString.charCodeAt(i);
+  //   }
+  //   return URL.createObjectURL(new Blob([bytes.buffer], { type: "image/png" }));
+  // };
 
   //console.log(typeof userId);
 
@@ -105,11 +105,15 @@ function MainPage() {
   const checkHistory = async (e) => {
     e.preventDefault();
     navigate("/history");
+    const authToken = localStorage.getItem("user-token");
 
     try {
-      const res = await authClient({
+      const res = await CustomApi({
         method: "get",
         url: "/analyze",
+        headers: {
+          'Authorization': authToken
+        },
       });
       console.log(res);
     } catch (error) {
@@ -119,11 +123,15 @@ function MainPage() {
       }
     }
 
+    
     // 닉네임 조회
     try {
-      const response = await authClient({
+      const response = await CustomApi({
         method: "get",
-        url: `/member`,
+        url: `/auth/userinfo`,
+        headers: {
+          'Authorization': authToken
+        },
       });
     } catch (error) {
       if (error.response) {
@@ -178,7 +186,7 @@ function MainPage() {
                         onClick={(e) => checkJuryuInfo(e, drink.id)}
                       >
                         <S.Image
-                          src={decodeBase64(drink.image)}
+                          src={drink.image}
                           alt="주류이미지"
                         />
                         <h5 style={{ width: "100%", height: "30px" }}>

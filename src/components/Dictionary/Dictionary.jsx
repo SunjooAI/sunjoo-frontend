@@ -62,7 +62,7 @@ function Dictionary() {
   };
 
   // drinkInfoList를 7개씩 나누어주는 부분
-  const dividedDrinkInfoList = divideArray(drinkInfoList, 7);
+  const dividedDrinkInfoList = divideArray(drinkInfoList, 5);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -201,7 +201,6 @@ function Dictionary() {
                   <option value={"FRUIT"}>과실주</option>
                   <option value={"YAKJU"}>약주</option>
                   <option value={"BRANDY"}>브랜디</option>
-                  <option value={"RICE_WINE"}>청주</option>
                   <option value={"MAKGEOLLI"}>막걸리</option>
                 </NativeSelect>
               </FormControl>
@@ -257,12 +256,12 @@ function Dictionary() {
                     onClick={(e) => checkJuryuInfo(e, drinkInfo.id)}
                   >
                     <S.Image
-                      // src={decodeBase64(drinkInfo.image)}
+                      src={drinkInfo.image}
                       alt="주류 이미지"
                     />
                     <S.SmallType>{getKoreanType(drinkInfo.type)}</S.SmallType>
                     <S.Text>
-                      {drinkInfo.name} ({drinkInfo.volume})ml{" "}
+                      {drinkInfo.name} ({drinkInfo.capacity})ml{" "}
                     </S.Text>
                   </S.WhiteBox>
                 ))}

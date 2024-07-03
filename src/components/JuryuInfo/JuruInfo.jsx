@@ -18,6 +18,7 @@ import Container from "@mui/material/Container";
 import { List, ListItem, ListItemText } from "@mui/material";
 import axios from "axios";
 import noAuthClient from "../../apis/noAuthClient";
+import { CustomApi } from "../../apis/CustomApi";
 
 const StyledList = styled(List)`
   display: flex;
@@ -89,30 +90,34 @@ function JuryuInfo() {
   const juryuId = location.state?.juryuId;
 
   // 이미지 디코딩 함수
-  const decodeBase64 = (base64) => {
-    try {
-      const binaryString = window.atob(base64);
+  // const decodeBase64 = (base64) => {
+  //   try {
+  //     const binaryString = window.atob(base64);
 
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
+  //     const bytes = new Uint8Array(binaryString.length);
+  //     for (let i = 0; i < binaryString.length; i++) {
+  //       bytes[i] = binaryString.charCodeAt(i);
+  //     }
 
-      return URL.createObjectURL(
-        new Blob([bytes.buffer], { type: "image/png" })
-      );
-    } catch (error) {
-      return null;
-    }
-  };
+  //     return URL.createObjectURL(
+  //       new Blob([bytes.buffer], { type: "image/png" })
+  //     );
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // };
 
   // 주류 정보 import
   useEffect(() => {
+    const authToken = localStorage.getItem("user-token");
     const JuryuData = async () => {
       try {
-        const response = await noAuthClient({
+        const response = await CustomApi({
           method: "get",
           url: `drinks/${juryuId}`,
+          headers: {
+            'Authorization': authToken
+          },
         });
         //const { name, image, dosu, price } = response.data;
         //const decodedImage = decodeBase64(image)'
@@ -125,9 +130,12 @@ function JuryuInfo() {
 
     const juryuReview = async () => {
       try {
-        const response = await noAuthClient({
+        const response = await CustomApi({
           method: "get",
           url: `drinks/${juryuId}/reviews`,
+          headers: {
+            'Authorization': authToken
+          },
         });
 
         if (response) {
@@ -225,16 +233,18 @@ function JuryuInfo() {
     //navigate("/dictionary");
 
     const labelKey = value;
+    const authToken = localStorage.getItem("user-token");
 
     try {
-      const res = await authClient({
+      const res = await CustomApi({
         method: "post",
         url: `drinks/${juryuId}/reviews`,
         data: {
-          userId: localStorage.getItem("user-id"),
           comment: inputValue,
-          score: value,
-          date: currentDate,
+          rating: value,
+        },
+        headers: {
+          'Authorization': authToken
         },
       });
     } catch (error) {
@@ -246,6 +256,8 @@ function JuryuInfo() {
     setAlertMessage("등록되었습니다. 최신 리뷰를 확인하려면 새로고침해주세요!");
   };
 
+
+
   return (
     <S.Container>
       <S.Wrapper>
@@ -253,7 +265,7 @@ function JuryuInfo() {
           <S.CenteredFormBox>
             <S.Title>🍺주류정보🍺</S.Title>
             <StyledImage
-              src={drinkInfo && decodeBase64(drinkInfo.image)}
+              src={drinkInfo?.image}
               alt="주류 이미지"
             />
             <StyledList>
@@ -287,7 +299,7 @@ function JuryuInfo() {
               <p key={reviews.id}>
                 {reviews.comment}{" "}
                 <p>
-                  {reviews.nickname} {reviews.date}
+                  {reviews.userId} {reviews.date}
                 </p>
               </p>
             ))}
