@@ -64,23 +64,23 @@ function Result() {
   // drinkId 상태
   const [drinkId, setDrinkId] = useState(null);
 
-  // 이미지 디코딩 함수
-  const decodeBase64 = (base64) => {
-    try {
-      const binaryString = window.atob(base64);
+  // // 이미지 디코딩 함수
+  // const decodeBase64 = (base64) => {
+  //   try {
+  //     const binaryString = window.atob(base64);
 
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
+  //     const bytes = new Uint8Array(binaryString.length);
+  //     for (let i = 0; i < binaryString.length; i++) {
+  //       bytes[i] = binaryString.charCodeAt(i);
+  //     }
 
-      return URL.createObjectURL(
-        new Blob([bytes.buffer], { type: "image/png" })
-      );
-    } catch (error) {
-      return null;
-    }
-  };
+  //     return URL.createObjectURL(
+  //       new Blob([bytes.buffer], { type: "image/png" })
+  //     );
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // };
 
   // 주류 추천 결과 id
   const reviewId = location.state?.id;
@@ -164,7 +164,7 @@ function Result() {
               감정은 {getSentence(reviewData?.sentiment).level} 입니다!
             </S.Title>
             <StyledImage
-              src={reviewData && decodeBase64(reviewData?.drinkImage)}
+              src={reviewData}
               alt="주류 이미지"
               style={{
                 display: "flex",
@@ -209,7 +209,7 @@ function Result() {
 
             <S.ImageContainer>
               <S.Image
-                src={decodeBase64(reviewData?.facialExpression)}
+                // src={decodeBase64(reviewData?.facialExpression)}
               ></S.Image>
             </S.ImageContainer>
             <S.Text>

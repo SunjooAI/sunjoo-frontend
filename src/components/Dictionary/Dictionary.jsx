@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import noAuthClient from "../../apis/noAuthClient";
+import { CustomApi } from "../../apis/CustomApi";
 
 function Dictionary() {
   const navigate = useNavigate();
@@ -35,19 +36,19 @@ function Dictionary() {
   const [isLoading, setIsLoading] = useState(false); // Add isLoading state
 
   // 이미지 디코딩 함수
-  const decodeBase64 = (base64) => {
-    const binaryString = window.atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return URL.createObjectURL(new Blob([bytes.buffer], { type: "image/png" }));
-  };
+  // const decodeBase64 = (base64) => {
+  //   // const binaryString = window.atob(base64);
+  //   const bytes = new Uint8Array(binaryString.length);
+  //   for (let i = 0; i < binaryString.length; i++) {
+  //     bytes[i] = binaryString.charCodeAt(i);
+  //   }
+  //   return URL.createObjectURL(new Blob([bytes.buffer], { type: "image/png" }));
+  // };
 
   useEffect(() => {
     if (drinkInfo) {
-      const decodedImage = decodeBase64(drinkInfo.image);
-      setDecodedImage(decodedImage);
+      // const decodedImage = decodeBase64(drinkInfo.image);
+      // setDecodedImage(decodedImage);
     }
   }, [drinkInfo]);
 
@@ -67,20 +68,31 @@ function Dictionary() {
     e.preventDefault();
     setIsLoading(true);
 
+    const authToken = localStorage.getItem("user-token");
+
     try {
       if (searchTerm !== "") {
-        const nameRes = await noAuthClient({
+
+        const nameRes = await CustomApi({
           method: "get",
           url: `/drinks/name/${searchTerm}`, // 작성한 주류 이름에 해당하는 API 요청
+          headers: {
+            'Authorization': authToken
+          },
         });
 
-        setDrinkInfoList(nameRes.data.drinks);
+        setDrinkInfoList(nameRes.data);
+        console.log(searchTerm.data.drinks);
       } else if (selectedCategory !== "ALL") {
-        const typeRes = await noAuthClient({
+        const typeRes = await CustomApi({
           method: "get",
           url: `/drinks/type/${selectedCategory}`, // 선택한 카테고리에 해당하는 API 요청
+          headers: {
+            'Authorization': authToken
+          },
         });
         setDrinkInfoList(typeRes.data.drinks);
+         console.log(typeRes.data);
       }
     } catch (error) {
       if (error.response) {
@@ -95,11 +107,16 @@ function Dictionary() {
     e.preventDefault();
     navigate("/juryuInfo", { state: { juryuId } });
 
+    const authToken = localStorage.getItem("user-token");
     try {
-      const res = await noAuthClient({
+      const res = await CustomApi({
         method: "get",
         url: `/drinks/${juryuId}`,
+        headers: {
+            'Authorization': authToken
+          },
       });
+      console.log(res.data);
     } catch (error) {
       if (error.response) {
         const err = error.response.data;
@@ -240,7 +257,7 @@ function Dictionary() {
                     onClick={(e) => checkJuryuInfo(e, drinkInfo.id)}
                   >
                     <S.Image
-                      src={decodeBase64(drinkInfo.image)}
+                      // src={decodeBase64(drinkInfo.image)}
                       alt="주류 이미지"
                     />
                     <S.SmallType>{getKoreanType(drinkInfo.type)}</S.SmallType>

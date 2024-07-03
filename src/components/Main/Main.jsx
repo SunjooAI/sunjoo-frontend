@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import authClient from "../../apis/authClient";
 import noAuthClient from "../../apis/noAuthClient";
 import CircularProgress from "@mui/material/CircularProgress";
+import { CustomApi } from "../../apis/CustomApi";
 
 import { useSelector } from "react-redux";
 
@@ -37,10 +38,14 @@ function MainPage() {
   // 주류 랭킹 보여주기 위해 api 요청
   useEffect(() => {
     const getReviewRanking = async () => {
+      const authToken = localStorage.getItem("user-token");
       try {
-        const response = await noAuthClient({
+        const response = await CustomApi({
           method: "get",
           url: `/drinks/rankings/review`,
+          headers: {
+            'Authorization': authToken
+          },
         });
         if (response) {
           setReviewRank(response.data.ranking);
@@ -52,10 +57,14 @@ function MainPage() {
     };
 
     const getScoreRanking = async () => {
+      const authToken = localStorage.getItem("user-token");
       try {
-        const response = await noAuthClient({
+        const response = await CustomApi({
           method: "get",
           url: `/drinks/rankings/rating`,
+          headers: {
+            'Authorization': authToken
+          },
         });
         if (response) {
           setScoreRank(response.data.ranking);
@@ -64,6 +73,8 @@ function MainPage() {
         console.error(error);
       }
     };
+
+
 
     // API 요청 함수 호출
     getReviewRanking();
@@ -74,11 +85,14 @@ function MainPage() {
   const checkJuryuInfo = async (e, juryuId) => {
     e.preventDefault();
     navigate("/juryuInfo", { state: { juryuId } });
-
+    const authToken = localStorage.getItem("user-token");
     try {
-      const res = await noAuthClient({
+      const res = await CustomApi({
         method: "get",
         url: `/drinks/${juryuId}`,
+        headers: {
+          'Authorization': authToken
+        },
       });
     } catch (error) {
       if (error.response) {
