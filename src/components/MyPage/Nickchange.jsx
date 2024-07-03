@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import S from "./styled";
 import "../../utils/settingCookie";
-import authClient from "../../apis/authClient";
+import {CustomApi} from "../../apis/CustomApi";
 import noAuthClient from "../../apis/noAuthClient";
 import { GET_NAME } from "../../reducer/nameSlice";
 import { useDispatch } from "react-redux";
@@ -18,17 +18,24 @@ function NickChange() {
 
   // api 명세서 업데이트 되면 수정 예정
   const onchangeNick = async () => {
-    navigate("/");
-    alert("변경이 완료되었습니다.");
+    const authToken = localStorage.getItem("user-token");
+    
+    console.log(nickname);
+
     try {
-      const res = await authClient({
+      const res = await CustomApi({
         method: "put",
-        url: `/member/nickname`,
+        url: "/auth/nickname",
+        headers: {
+          'Authorization': authToken
+        },
         data: {
-          userId: localStorage.getItem("user-id"),
-          newNickname: nickname,
+          newNickName: nickname,
         },
       });
+
+      navigate("/");
+      alert("변경이 완료되었습니다.");
     } catch (error) {
       const err = error.response.data;
       console.log(err);

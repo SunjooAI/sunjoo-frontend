@@ -16,6 +16,7 @@ import HistoryInfoPage from "./pages/HistoryInfoPage";
 import InputEmailPage from "./pages/InputEmailPage";
 import InputNewPwdPage from "./pages/InputNewPwd";
 import RegisterPage from "./pages/RegisterPage";
+import CamPage from "./pages/CamPage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -87,7 +88,8 @@ function App() {
 
           {/* <Route path="/login" element={<LoginPage />} /> */}
           {/* <Route path="/" element={<LoginPage />} /> */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/Login" element={<LoginPage />} />
+          <Route path="/Cam" element={<CamPage />} />
           <Route path="/InputEmail" element={<InputEmailPage />} />
           <Route path="/InputNewPwd" element={<InputNewPwdPage />} />
           <Route path="/Register" element={<RegisterPage />} />

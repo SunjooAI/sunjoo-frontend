@@ -93,7 +93,7 @@ const CustomNavbarlink = styled(Navbarlink)`
 `;
 
 export default function Header() {
-  const userName = useSelector((state) => state.name.name);
+  const userToken = useSelector((state) => state.name.name);
   const dispatch = useDispatch();
   const [dictionaryData, setDictionaryData] = useState(null);
 
@@ -109,10 +109,22 @@ export default function Header() {
             BeJuRyu
           </CustomLink>
         </Navbarlogo>
-        {userName === "" ? (
+        {userToken === "" ? (
           ""
         ) : (
           <Navbarmenu>
+             <div>
+              <li>
+                <Link
+                  to={{
+                    pathname: "/Cam",
+                  }}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  화상채팅
+                </Link>
+              </li>
+            </div>
             <div>
               <li>
                 <Link
@@ -136,7 +148,7 @@ export default function Header() {
           </Navbarmenu>
         )}
 
-        {userName === "" ? (
+        {userToken === "" ? (
           <Navbarlink>
             <div></div>
           </Navbarlink>
