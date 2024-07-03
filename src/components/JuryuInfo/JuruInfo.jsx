@@ -18,6 +18,7 @@ import Container from "@mui/material/Container";
 import { List, ListItem, ListItemText } from "@mui/material";
 import axios from "axios";
 import noAuthClient from "../../apis/noAuthClient";
+import { CustomApi } from "../../apis/CustomApi";
 
 const StyledList = styled(List)`
   display: flex;
@@ -89,30 +90,34 @@ function JuryuInfo() {
   const juryuId = location.state?.juryuId;
 
   // 이미지 디코딩 함수
-  const decodeBase64 = (base64) => {
-    try {
-      const binaryString = window.atob(base64);
+  // const decodeBase64 = (base64) => {
+  //   try {
+  //     const binaryString = window.atob(base64);
 
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
+  //     const bytes = new Uint8Array(binaryString.length);
+  //     for (let i = 0; i < binaryString.length; i++) {
+  //       bytes[i] = binaryString.charCodeAt(i);
+  //     }
 
-      return URL.createObjectURL(
-        new Blob([bytes.buffer], { type: "image/png" })
-      );
-    } catch (error) {
-      return null;
-    }
-  };
+  //     return URL.createObjectURL(
+  //       new Blob([bytes.buffer], { type: "image/png" })
+  //     );
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // };
 
   // 주류 정보 import
   useEffect(() => {
+    const authToken = localStorage.getItem("user-token");
     const JuryuData = async () => {
       try {
-        const response = await noAuthClient({
+        const response = await CustomApi({
           method: "get",
           url: `drinks/${juryuId}`,
+          headers: {
+            'Authorization': authToken
+          },
         });
         //const { name, image, dosu, price } = response.data;
         //const decodedImage = decodeBase64(image)'
@@ -125,9 +130,12 @@ function JuryuInfo() {
 
     const juryuReview = async () => {
       try {
-        const response = await noAuthClient({
+        const response = await CustomApi({
           method: "get",
           url: `drinks/${juryuId}/reviews`,
+          headers: {
+            'Authorization': authToken
+          },
         });
 
         if (response) {
@@ -227,7 +235,7 @@ function JuryuInfo() {
     const labelKey = value;
 
     try {
-      const res = await authClient({
+      const res = await CustomApi({
         method: "post",
         url: `drinks/${juryuId}/reviews`,
         data: {
@@ -253,7 +261,7 @@ function JuryuInfo() {
           <S.CenteredFormBox>
             <S.Title>🍺주류정보🍺</S.Title>
             <StyledImage
-              src={drinkInfo && decodeBase64(drinkInfo.image)}
+              src={drinkInfo?.image}
               alt="주류 이미지"
             />
             <StyledList>

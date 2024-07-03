@@ -61,6 +61,9 @@ function Dictionary() {
     return dividedArray;
   };
 
+  useEffect(() => {
+    
+  })
   // drinkInfoList를 7개씩 나누어주는 부분
   const dividedDrinkInfoList = divideArray(drinkInfoList, 7);
 
