@@ -24,8 +24,9 @@ function Logout() {
 
   // logout 로컬 구현
   const logout = () => {
-    settingCookie("remove");
-    dispatch(GET_NAME(""));
+    //settingCookie("remove");
+    dispatch(GET_NAME(null));
+    localStorage.clear();
     navigate("/");
   };
 
@@ -42,11 +43,11 @@ function Logout() {
     //   });
 
     try {
-      await Kakao.Auth.logout();
+      //await Kakao.Auth.logout();
       logout();
 
       console.log("logout ok\naccess token -> " + Kakao.Auth.getAccessToken());
-      deleteCookie();
+      //deleteCookie();
       setIsLogin(false);
       localStorage.clear();
     } catch (error) {
@@ -61,7 +62,8 @@ function Logout() {
   }, []);
 
   const handleLogout = () => {
-    logoutWithKakao();
+    //logoutWithKakao();
+    logout();
   };
 
   const logoutView = (

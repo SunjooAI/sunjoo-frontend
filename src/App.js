@@ -43,9 +43,10 @@ axios.defaults.withCredentials = true;
 
 function App() {
   const dispatch = useDispatch();
+  const [userToken, setUserToken] = useState(null);
   //const userName = useSelector((state) => state.name.name);
   //const userName = useSelector((state) => state.name.name);
-  const userToken = useSelector((state) => state.name.name);
+  //const userToken = useSelector((state) => state.name.name);
 
   // const isLogin = () => {
   //   const token = settingCookie("get-access");
@@ -64,7 +65,13 @@ function App() {
 
   useEffect(() => {
     setScreenSize();
-  });
+    const token = localStorage.getItem("user-token");
+    console.log(token);
+    if(token) {
+      setUserToken(token);
+      dispatch(GET_NAME(token));
+    } 
+  }, [dispatch]);
 
   // useEffect(() => {
   //   isLogin();
@@ -79,7 +86,7 @@ function App() {
       <ContentWrapper>
         <Header />
         <Routes>
-          {userToken === "" ? (
+          {!userToken  ? (
             <Route path="/" element={<LoginPage />} />
           ) : (
             <Route path="/" element={<MainPage />} />

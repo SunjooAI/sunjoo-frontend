@@ -37,18 +37,21 @@ function Login() {
         method: "get",
         url: `/auth/login/kakao?token=${kakaoToken}`,
       });
-
-      const cookie = new Cookies();
-      cookie.set("accessToken", res.data.token.access);
-      cookie.set("refreshToken", res.data.token.refresh);
+      
+      const authToken = res.headers['authorization'];
+      localStorage.setItem("user-token", authToken);
+      dispatch(GET_NAME(authToken));
+      // const cookie = new Cookies();
+      // cookie.set("accessToken", res.data.token.access);
+      // cookie.set("refreshToken", res.data.token.refresh);
 
       // const decode = jwt_decode(res.data.token.access);
 
       // redux에 nickname 저장
-      dispatch(GET_NAME(res.data.memberResponse.nickname));
+      //dispatch(GET_NAME(res.data.memberResponse.nickname));
 
-      localStorage.setItem("user-id", res.data.memberResponse.id);
-      localStorage.setItem("nickname", res.data.memberResponse.nickname);
+      // localStorage.setItem("user-id", res.data.memberResponse.id);
+      // localStorage.setItem("nickname", res.data.memberResponse.nickname);
 
       await sendTestRequest();
     } catch (error) {}
@@ -119,7 +122,6 @@ function Login() {
       
     
       const authToken = res.headers['authorization'];
-      console.log(authToken);
       localStorage.setItem("user-token", authToken);
       dispatch(GET_NAME(authToken));
       navigate("/");

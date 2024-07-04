@@ -18,10 +18,10 @@ function MainPage() {
   // 로딩 상태를 관리하는 변수
   const [isLoading, setIsLoading] = useState(true);
   const [selectedData, setSelectedData] = useState(null);
+  const [userNickname, setUserNickname] = useState(true);
 
   const navigate = useNavigate();
 
-  const userId = parseInt(localStorage.getItem("user-id"));
 
   // 이미지 디코딩 함수
   // const decodeBase64 = (base64) => {
@@ -74,11 +74,30 @@ function MainPage() {
       }
     };
 
+    const getUserInfo = async() => {
+      const authToken = localStorage.getItem("user-token");
 
+      try {
+        const res = await CustomApi({
+          method: "get",
+          url: "/auth/userinfo",
+          headers: {
+            'Authorization': authToken
+          },
+        });
+        if(res) {
+          setUserNickname(res.data.result.name);
+        }
+      }
+      catch(err) {
+          console.log("유저 정보 조회 실패", err);
+        }
+      }
 
     // API 요청 함수 호출
     getReviewRanking();
     getScoreRanking();
+    getUserInfo();
   }, []);
 
   // 각 주류 상세 페이지로 이동
@@ -154,7 +173,7 @@ function MainPage() {
     <S.Container>
       <S.Wrapper>
         <S.Form>
-          {userName} 님 오늘의 기분은 어떠신가요? Be주류 TOP10을 확인할 수
+          {userNickname} 님 오늘의 기분은 어떠신가요? Be주류 TOP10을 확인할 수
           있어요!
           {isLoading ? (
             <S.juruBox

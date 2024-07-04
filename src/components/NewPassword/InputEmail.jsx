@@ -21,16 +21,11 @@
 
     const sendEmail = async() => {
       console.log("메일 전송 : " + email);
-      const authToken = localStorage.getItem("user-token");
-
       try {
         
         const res = await CustomApi({
           method: "post",
           url: "/auth/reset-password/send-email",
-          headers: {
-            'Authorization': authToken
-          },
           data: {
            email:email
           },
