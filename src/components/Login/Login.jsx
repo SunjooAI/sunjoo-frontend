@@ -119,8 +119,6 @@ function Login() {
         },
       });
 
-      
-    
       const authToken = res.headers['authorization'];
       localStorage.setItem("user-token", authToken);
       dispatch(GET_NAME(authToken));

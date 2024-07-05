@@ -20,6 +20,9 @@ function MainPage() {
   const [selectedData, setSelectedData] = useState(null);
   const [userNickname, setUserNickname] = useState(true);
 
+  // 새로고침 관리
+  const [hasRefreshed, setHasRefreshed] = useState(false);
+
   const navigate = useNavigate();
 
 
@@ -87,6 +90,7 @@ function MainPage() {
         });
         if(res) {
           setUserNickname(res.data.result.name);
+          
         }
       }
       catch(err) {
@@ -98,6 +102,7 @@ function MainPage() {
     getReviewRanking();
     getScoreRanking();
     getUserInfo();
+    //window.location.reload();
   }, []);
 
   // 각 주류 상세 페이지로 이동

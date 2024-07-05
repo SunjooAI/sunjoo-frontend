@@ -18,7 +18,6 @@ const CamPage = () => {
     <Main>
       <Content>
         <VideoRoomComponent />
-        registerServiceWorker();
       </Content>
     </Main>
   );

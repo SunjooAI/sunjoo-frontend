@@ -109,7 +109,7 @@ export default function Header() {
             BeJuRyu
           </CustomLink>
         </Navbarlogo>
-        {userToken === "" ? (
+        {!userToken ? (
           ""
         ) : (
           <Navbarmenu>
@@ -148,7 +148,7 @@ export default function Header() {
           </Navbarmenu>
         )}
 
-        {userToken === "" ? (
+        {!userToken ? (
           <Navbarlink>
             <div></div>
           </Navbarlink>
