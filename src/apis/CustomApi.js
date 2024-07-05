@@ -5,7 +5,7 @@ const CustomApiLogin = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  //withCredentials: true,
 });
 
 const CustomApi = axios.create({
