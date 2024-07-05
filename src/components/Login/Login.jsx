@@ -19,6 +19,7 @@ import TextField  from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
 import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
 
 const { Kakao } = window;
 
@@ -29,6 +30,9 @@ function Login() {
   const [jwtToken, setJwtToken] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+
+  const [googleName, setGoogleName] = useState("");
+  const [googleEmail, setGoogleEmail] = useState("");
 
   // snsLogin
   const snsLogin = async (kakaoToken) => {
@@ -130,6 +134,31 @@ function Login() {
       }
     }
 
+    // 구글 로그인
+    const handlGoogleLogin = async(decodeding) => {
+      console.log(decodeding);
+      try {
+        const res = await CustomApiLogin({
+          method: "post",
+          url: "/auth/login/google",
+          
+          data: {
+            name:decodeding.name,
+            email:decodeding.email
+          },
+        });
+  
+        const authToken = res.headers['authorization'];
+        localStorage.setItem("user-token", authToken);
+        dispatch(GET_NAME(authToken));
+        navigate("/");
+      }
+      catch(err) {
+          console.log("로그인 실패", err);
+          alert("로그인에 실패했습니다. 다시 시도해주세요.");
+        }
+      }
+
   useEffect(() => {
     if (Kakao.Auth.getAccessToken()) {
       setIsLogin(true);
@@ -201,6 +230,19 @@ function Login() {
                 alt="카카오 로그인 버튼"
               />
             </div>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                const decodeding = jwt_decode(credentialResponse.credential);
+                handlGoogleLogin(decodeding);
+              }}
+              onError={() => {
+                console.log("Google Login 실패");
+              }}
+              width={"222px"}
+              height={"53px"}
+              useOneTap
+            >
+            </GoogleLogin>
           </div>
         </S.BtnList>
       </S.Wrapper>
