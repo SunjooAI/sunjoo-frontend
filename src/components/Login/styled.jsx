@@ -8,6 +8,8 @@ const KakaoButton = styled.button`
 `;
 
 const Container = styled.div`
+  margin-top : 2rem;
+  margin-bottom : 2rem;
   width: 30rem;
   max-width: 45rem;
   background-color: #eac5f3;

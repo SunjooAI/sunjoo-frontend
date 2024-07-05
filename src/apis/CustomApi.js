@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const CustomApiLogin = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: "http://13.124.194.48:9000",
   headers: {
     'Content-Type': 'application/json',
   },
@@ -9,7 +9,7 @@ const CustomApiLogin = axios.create({
 });
 
 const CustomApi = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: "http://13.124.194.48:9000",
   headers: {
     'Content-Type': 'application/json',
   },
