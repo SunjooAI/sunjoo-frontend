@@ -47,14 +47,15 @@ function History() {
       try {
         const response = await CustomApi({
           method: "get",
-          url: "/analyze",
+          url: "/analyze/list",
           headers: {
             'Authorization': authToken
           },
         });
         // 최신순으로 정렬하기 위함.
-        const sortedList = response.data.sort((a, b) => b.id - a.id);
+        const sortedList = response.data.sort((a, b) => b.resultId - a.resultId);
         setRecommendList(sortedList);
+        console.log(response.data);
       } catch (error) {
         if (error.response) {
           const err = error.response.data;
@@ -65,8 +66,8 @@ function History() {
     reviewList();
   }, []);
 
-  const handleListClick = (id) => {
-    navigate("/historyInfo", { state: { id } });
+  const handleListClick = (resultId) => {
+    navigate("/historyInfo", { state: { resultId } });
   };
 
   const goMypage = () => {
@@ -81,7 +82,7 @@ function History() {
         <S.Title>현재까지 이용기록입니다</S.Title>
         <S.WhiteBox>
           {getCurrentPageItems().map((item) => (
-            <S.listStyle key={item.id} onClick={() => handleListClick(item.id)}>
+            <S.listStyle key={item.resultId} onClick={() => handleListClick(item.resultId)}>
               {item.date}
             </S.listStyle>
           ))}

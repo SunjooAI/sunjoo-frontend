@@ -13,6 +13,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { CustomApi } from "../../apis/CustomApi";
 
 const { Kakao } = window;
 
@@ -66,22 +67,22 @@ function Result() {
   const [drinkId, setDrinkId] = useState(null);
 
   // 이미지 디코딩 함수
-  const decodeBase64 = (base64) => {
-    try {
-      const binaryString = window.atob(base64);
+  // const decodeBase64 = (base64) => {
+  //   try {
+  //     const binaryString = window.atob(base64);
 
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
+  //     const bytes = new Uint8Array(binaryString.length);
+  //     for (let i = 0; i < binaryString.length; i++) {
+  //       bytes[i] = binaryString.charCodeAt(i);
+  //     }
 
-      return URL.createObjectURL(
-        new Blob([bytes.buffer], { type: "image/png" })
-      );
-    } catch (error) {
-      return null;
-    }
-  };
+  //     return URL.createObjectURL(
+  //       new Blob([bytes.buffer], { type: "image/png" })
+  //     );
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // };
 
   // 주류 추천 결과 id
   const analysisId = location.state?.analysisId;
@@ -180,10 +181,14 @@ function Result() {
   useEffect(() => {
     // 결과 불러오기 위한 로직
     const getSentiment = async () => {
+      const authToken = localStorage.getItem("user-token");
       try {
-        const response = await authClient({
+        const response = await CustomApi({
           method: "get",
           url: `/analyze/${analysisId}`,
+          headers: {
+            'Authorization': authToken
+          },
         });
 
         const data = response.data;
@@ -224,7 +229,7 @@ function Result() {
               현재 감정은 {getSentence(resultData?.sentiment).level} 입니다!
             </S.Title>
             <StyledImage
-              src={resultData && decodeBase64(resultData?.drinkImage)}
+              src={resultData?.drinkImageUrl}
               alt="주류 이미지"
               style={{
                 display: "flex",
@@ -267,9 +272,9 @@ function Result() {
             <S.Title>입력하신 데이터</S.Title>
 
             <S.ImageContainer>
-              <S.Image
+              {/* <S.Image
                 src={decodeBase64(resultData?.facialExpression)}
-              ></S.Image>
+              ></S.Image> */}
             </S.ImageContainer>
             <S.Text>
               <br />
