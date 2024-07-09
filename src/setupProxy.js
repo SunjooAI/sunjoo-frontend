@@ -5,29 +5,31 @@ module.exports = function (app) {
     "/auth",
     createProxyMiddleware({
       target: "http://13.124.194.48:9000",
-      pathRewrite: { "^/api" : "" },
+      pathRewrite: { "^/auth" : "" },
       changeOrigin: true,
       secure: false,
     })
   );
 
-  // app.use(
-  //   "/analyze",
-  //   createProxyMiddleware({
-  //     target: "http://141.164.49.27",
-  //     changeOrigin: true,
-  //     secure: false,
-  //   })
-  // );
+  app.use(
+    "/analyze",
+    createProxyMiddleware({
+      target: "http://13.124.194.48:9000",
+      pathRewrite: { "^/analyze" : "" },
+      changeOrigin: true,
+      secure: false,
+    })
+  );
 
-  // app.use(
-  //   "/drinks",
-  //   createProxyMiddleware({
-  //     target: "http://141.164.49.27",
-  //     changeOrigin: true,
-  //     secure: false,
-  //   })
-  // );
+  app.use(
+    "/drinks",
+    createProxyMiddleware({
+      target: "http://13.124.194.48:9000",
+      pathRewrite: { "^/drinks" : "" },
+      changeOrigin: true,
+      secure: false,
+    })
+  );
 
   // app.use(
   //   "/member",
