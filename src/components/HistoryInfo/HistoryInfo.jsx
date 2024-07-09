@@ -10,6 +10,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { CustomApi } from "../../apis/CustomApi";
 
 const StyledTypography = styled(Typography)`
   font-family: "BejuryuFont";
@@ -83,16 +84,16 @@ function Result() {
   // };
 
   // 주류 추천 결과 id
-  const reviewId = location.state?.id;
+  const reviewId = location.state?.resultId;
 
   // id에 맞춰 결과 불러오기
 
   // 주류 추천결과 멘트
   const getSentence = (sentiment) => {
     switch (sentiment) {
-      case "SAD_3":
-      case "SAD_2":
-      case "SAD_1":
+      case "SAD3":
+      case "SAD2":
+      case "SAD1":
         return {
           level: "슬픔😥",
           comment:
@@ -104,9 +105,9 @@ function Result() {
           comment:
             "일상에서 조화와 안정을 느끼고 있는 당신에게,\n 술 한 잔하며, 가끔은 풀어내고 즐거움을 더해보는 것은 어떨까요?",
         };
-      case "HAPPY_1":
-      case "HAPPY_2":
-      case "HAPPY_3":
+      case "HAPPY1":
+      case "HAPPY2":
+      case "HAPPY3":
         return {
           level: "😄기쁨😁",
           comment:
@@ -122,11 +123,15 @@ function Result() {
 
   useEffect(() => {
     // 결과 불러오기 위한 로직
+    const authToken = localStorage.getItem("user-token");
     const getSentiment = async () => {
       try {
-        const response = await authClient({
+        const response = await CustomApi({
           method: "get",
           url: `/analyze/${reviewId}`,
+          headers: {
+            'Authorization': authToken
+          },
         });
 
         const data = response.data;
@@ -164,7 +169,7 @@ function Result() {
               감정은 {getSentence(reviewData?.sentiment).level} 입니다!
             </S.Title>
             <StyledImage
-              src={reviewData}
+              src={reviewData?.drinkImageUrl}
               alt="주류 이미지"
               style={{
                 display: "flex",

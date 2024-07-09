@@ -1,18 +1,13 @@
-/* TODO
-1. 거의 완료
-2. [X] 이미지 첨부 후 서버와 통신할 때 json로 넘기는 방법 찾아볼 것.(facial-expression: string => base64 인코딩
-3. [X] 현재 줄글 작성 부분과 이미지 들어가는 게 따로 구현되있는데, 서버 넘길때 한 번에 넘겨야되므로 코드 합침 필요
-  => formData*/
 import S from "./styled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PhotoUpload from "./PhotoUpload";
 import authClient from "../../apis/authClient";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
+import { CustomApi } from "../../apis/CustomApi";
 
 const StyledTypography = styled(Typography)`
   font-family: "BejuryuFont";
@@ -21,8 +16,6 @@ const StyledTypography = styled(Typography)`
 function Recommend() {
   const navigate = useNavigate();
   const [jwtToken, setJwtToken] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [inputValue, setInputValue] = useState(""); // 텍스트 입력값 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -33,56 +26,44 @@ function Recommend() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (selectedFile) {
-      const reader = new FileReader();
-      // base64 encoding해서
-      reader.onloadend = async () => {
-        const base64Data = String(reader.result.split(",")[1]);
+    const authToken = localStorage.getItem("user-token");
 
-        try {
-          const res = await authClient({
-            method: "post",
-            url: "/analyze/sources",
-            data: {
-              date: currentDate,
-              facialExpression: base64Data,
-              textExpression: inputValue,
-            },
-          });
+    try {
+      const res = await CustomApi({
+        method: "post",
+        url: "/analyze/sources",
+        data: {
+          textExpression: inputValue,
+        },
+        headers: {
+          'Authorization': authToken
+        },
+      });
 
-          // response값으로 받은 analysisId result.jsx 파일에서 사용
-          const analysisId = res.data.id;
+      // response값으로 받은 analysisId result.jsx 파일에서 사용
+      const analysisId = res.data.id;
 
-          if (analysisId) {
-            // analysisId가 정의된 경우 실행할 코드
-            console.log("recommend analysisId:", analysisId);
-          } else {
-            // analysisId가 정의되지 않은 경우 실행할 코드
-            console.log("recommend analysisId is undefined");
-          }
+      if (analysisId) {
+        // analysisId가 정의된 경우 실행할 코드
+        console.log("recommend analysisId:", analysisId);
+      } else {
+        // analysisId가 정의되지 않은 경우 실행할 코드
+        console.log("recommend analysisId is undefined");
+      }
 
-          navigate("/result", { state: { analysisId: res.data.id } });
-          // 서버 응답 처리
-        } catch (error) {
-          if (error.response) {
-            // 서버 응답 에러
-            const err = error.response.data;
-            console.log(err);
-          }
-        }
-      };
-
-      reader.readAsDataURL(selectedFile);
+      navigate("/result", { state: { analysisId: res.data.id } });
+      // 서버 응답 처리
+    } catch (error) {
+      if (error.response) {
+        // 서버 응답 에러
+        const err = error.response.data;
+        console.log(err);
+      }
     }
   };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-  };
-
-  const handleFileChange = (file) => {
-    setSelectedFile(file);
-    //setInputValue(e.target.value);
   };
 
   return (
@@ -98,11 +79,6 @@ function Recommend() {
             </S.MyState>
           )}
         </S.WhiteBox>
-        <PhotoUpload
-          setSelectedFile={handleFileChange}
-          setImagePreview={setImagePreview}
-          imagePreview={imagePreview}
-        />
         <S.ButtonContainer>
           <S.SubmitButton onClick={handleFormSubmit}>
             감정 분석 시작
@@ -187,7 +163,7 @@ function Recommend() {
   );
 }
 
-// 현재 날짜와 시각을 "yyyy.MM.dd HH:mm" 형식으로 반환하는 함수
+// 현재 날짜와 시각을 "yyyy-MM-dd HH:mm" 형식으로 반환하는 함수
 function getCurrentDateTime() {
   const date = new Date();
 
