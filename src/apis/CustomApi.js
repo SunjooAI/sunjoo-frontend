@@ -9,7 +9,7 @@ const CustomApiLogin = axios.create({
 });
 
 const CustomApi = axios.create({
-  baseURL: "/api",
+  baseURL: "http://13.124.194.48:9000",
   headers: {
     'Content-Type': 'application/json',
   },
